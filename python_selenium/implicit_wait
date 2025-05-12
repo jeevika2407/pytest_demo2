@@ -1,0 +1,31 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions 
+
+driver = webdriver.Chrome()
+driver.maximize_window()
+driver.get("https://www.hyrtutorials.com/p/waits-demo.html")
+driver.implicitly_wait(10)
+btn1=driver.find_element(By.XPATH,value="//button[@id='btn1']")
+btn1.click()
+txt=driver.find_element(By.XPATH,value="(//input[@id='txt1'])[1]")
+txt.send_keys("hello")
+
+
+wait = WebDriverWait(driver, 10)
+btn1 = driver.find_element(By.XPATH, "//button[@id='btn1']")
+btn1.click()
+txt=wait.until(expected_conditions.visibility_of_element_located((By.XPATH,"(//input[@id='txt1'])[1]")))
+txt.send_keys("hello")
+
+
+wait = WebDriverWait(driver, 10)
+btn1 = driver.find_element(By.XPATH, "//button[@id='btn2']")
+btn1.click()
+txt=wait.until(expected_conditions.presence_of_element_located((By.XPATH,"(//input[@id='txt2'])[1]")))
+txt.send_keys("world")
+
+wait=WebDriverWait(driver,10)
+wait.until(expected_conditions.element_to_be_clickable(()))
