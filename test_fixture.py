@@ -1,38 +1,34 @@
-import pytest
+# test_search.py
 import time
-from selenium import webdriver
+import pytest
 from selenium.webdriver.common.by import By
-@pytest.fixture()
-def test_setUp():
-    global driver
-    driver=webdriver.Chrome()
-    driver.maximize_window()
-    driver.get("https://tutorialsninja.com/demo/")
-    yield
-    driver.quit()
-def test_hp(test_setUp):
-    ele=driver.find_element(By.XPATH,value="//input[@name='search']")
-    ele.send_keys("Hp")
-    btn=driver.find_element(By.XPATH,value="//button[@class='btn btn-default btn-lg']")
-    btn.click()   
-    time.sleep(3)
-    txt=driver.find_element(By.XPATH,value="//div[@class='caption']//h4/a").text
-    assert(txt._contains_("HP"))
+
+@pytest.mark.usefixtures("test_setUp")
+class TestSearch:
+    
+    def test_hp(self):
+        ele = self.driver.find_element(By.NAME, "search")
+        ele.send_keys("Hp")
+        self.driver.find_element(By.CLASS_NAME, "btn-default").click()
+        time.sleep(2)
+        assert "HP" in self.driver.find_element(By.CSS_SELECTOR, ".caption h4 a").text
 
 def test_Honda(test_setUp):
-    ele=driver.find_element(By.XPATH,value="//input[@name='search']")
+    driver = test_setUp
+    ele = driver.find_element(By.XPATH, "//input[@name='search']")
     ele.send_keys("Honda")
-    btn=driver.find_element(By.XPATH,value="//button[@class='btn btn-default btn-lg']")
-    btn.click()   
+    btn = driver.find_element(By.XPATH, "//button[@class='btn btn-default btn-lg']")
+    btn.click()
     time.sleep(3)
-    txt=driver.find_element(By.XPATH,value="//*[@id='content']/p[2]").text
-    assert(txt._contains_("There is no product that matches the search criteria."))
+    txt = driver.find_element(By.XPATH, "//*[@id='content']/p[2]").text
+    assert "There is no product that matches the search criteria." in txt
 
 def test_Empty(test_setUp):
-    ele=driver.find_element(By.XPATH,value="//input[@name='search']")
+    driver = test_setUp
+    ele = driver.find_element(By.XPATH, "//input[@name='search']")
     ele.send_keys("")
-    btn=driver.find_element(By.XPATH,value="//button[@class='btn btn-default btn-lg']")
-    btn.click()   
+    btn = driver.find_element(By.XPATH, "//button[@class='btn btn-default btn-lg']")
+    btn.click()
     time.sleep(3)
-    txt=driver.find_element(By.XPATH,value="//*[@id='content']/p[2]").text
-    assert(txt._contains_("There is no product that matches the search criteria."))
+    txt = driver.find_element(By.XPATH, "//*[@id='content']/p[2]").text
+    assert "There is no product that matches the search criteria." in txt
